@@ -4,14 +4,20 @@ metadata:
   name: cockroach
   namespace: db-system
 spec:
-  clusterDomain: azure.dustinscott.io
+  clusterDomain: cluster.local
   conf:
     attrs: []
     cache: 25%
     cluster-name: sql
     disable-cluster-name-verification: false
     http-port: 8080
-    join: []
+    join:
+      - cockroach-cockroachdb-0.aws.dustinscott.io
+      - cockroach-cockroachdb-1.aws.dustinscott.io
+      - cockroach-cockroachdb-2.aws.dustinscott.io
+      - cockroach-cockroachdb-0.azure.dustinscott.io
+      - cockroach-cockroachdb-1.azure.dustinscott.io
+      - cockroach-cockroachdb-2.azure.dustinscott.io
     locality: cloud=azure,region=eastus
     logtostderr: INFO
     max-sql-memory: 25%
@@ -50,6 +56,7 @@ spec:
       annotations: {}
       labels:
         app.kubernetes.io/component: cockroachdb
+        networking.istio.io/exportTo: "*"
     ports:
       grpc:
         external:
@@ -73,7 +80,10 @@ spec:
     labels: {}
   statefulset:
     annotations: {}
-    args: []
+    args:
+      - --listen-addr=localhost:26257
+      - --advertise-addr=$(hostname -s).azure.dustinscott.io
+      - --locality-advertise-addr=region=eastus@$(hostname -f):26527
     budget:
       maxUnavailable: 1
     env: []

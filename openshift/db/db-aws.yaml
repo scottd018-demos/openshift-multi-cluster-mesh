@@ -56,6 +56,7 @@ spec:
       annotations: {}
       labels:
         app.kubernetes.io/component: cockroachdb
+        networking.istio.io/exportTo: "*"
     ports:
       grpc:
         external:

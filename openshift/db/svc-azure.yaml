@@ -1,0 +1,30 @@
+kind: ExportedServiceSet
+apiVersion: federation.maistra.io/v1
+metadata:
+  name: aws
+  namespace: istio-system
+spec:
+  exportRules:
+  - type: NameSelector
+    nameSelector:
+      namespace: db-system
+      name: cockroach-cockroachdb
+      alias:
+        namespace: db-system
+        name: cockroach-cockroachdb
+---
+kind: ImportedServiceSet
+apiVersion: federation.maistra.io/v1
+metadata:
+  name: azure
+  namespace: istio-system
+spec:
+  importRules:
+  - type: NameSelector
+    importAsLocal: false
+    nameSelector:
+      namespace: db-system
+      name: cockroach-cockroachdb
+      alias:
+        namespace: db-system
+        name: cockroach-cockroachdb
