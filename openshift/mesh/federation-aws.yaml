@@ -1,0 +1,20 @@
+kind: ServiceMeshPeer
+apiVersion: federation.maistra.io/v1
+metadata:
+  name: azure
+  namespace: istio-system
+spec:
+  remote:
+    addresses:
+      - "52.188.221.31"
+  gateways:
+    ingress:
+      name: ingress-azure-mesh
+    egress:
+      name: egress-azure-mesh
+  security:
+    trustDomain: azure.dustinscott.io
+    clientID: azure.dustinscott.io/ns/istio-system/sa/egress-aws-mesh-service-account
+    certificateChain:
+      kind: ConfigMap
+      name: azure-ca-root-cert

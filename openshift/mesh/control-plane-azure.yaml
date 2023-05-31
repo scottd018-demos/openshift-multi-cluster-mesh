@@ -1,0 +1,74 @@
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: istio-system
+---
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: azure
+  namespace: istio-system
+spec:
+  general:
+    logging:
+      componentLevels:
+        istio_pilot: info
+        istio_policy: debug
+        istio_telemetry: warn
+        istio_cni: info
+        istiod: debug
+        envoy: info
+  version: v2.3
+  security:
+    identity:
+      type: ThirdParty  # required setting for ROSA
+    trust:
+      domain: azure.dustinscott.io
+  tracing:
+    type: Jaeger
+    sampling: 10000
+  policy:
+    type: Istiod
+  addons:
+    grafana:
+      enabled: true
+    jaeger:
+      install:
+        storage:
+          type: Memory
+    kiali:
+      enabled: true
+    prometheus:
+      enabled: true
+  telemetry:
+    type: Istiod
+  gateways:
+    additionalEgress:
+      egress-aws-mesh:
+        enabled: true
+        requestedNetworkView:
+        - aws-network
+        routerMode: sni-dnat
+        service:
+          metadata:
+            labels:
+              federation.maistra.io/egress-for: egress-aws-mesh
+          ports:
+          - port: 15443
+            name: tls
+          - port: 8188
+            name: http-discovery  # note HTTP here
+    additionalIngress:
+      ingress-aws-mesh:
+        enabled: true
+        routerMode: sni-dnat
+        service:
+          type: LoadBalancer
+          metadata:
+            labels:
+              federation.maistra.io/ingress-for: ingress-aws-mesh
+          ports:
+          - port: 15443
+            name: tls
+          - port: 8188
+            name: https-discovery  # note HTTPS here

@@ -4,4 +4,4 @@ terraform/.terraform.tfstate.lock.info
 terraform/main.plan
 *.tfstate
 *.backup
-kubeconfig
+kubeconfig*
