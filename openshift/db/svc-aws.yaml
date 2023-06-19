@@ -7,11 +7,12 @@ spec:
   exportRules:
   - type: NameSelector
     nameSelector:
-      namespace: db-system
+      namespace: aws-db-system
       name: cockroach-cockroachdb
-      alias:
-        namespace: db-system
-        name: cockroach-cockroachdb
+  - type: NameSelector
+    nameSelector:
+      namespace: aws-db-system
+      name: cockroach-cockroachdb-public
 ---
 kind: ImportedServiceSet
 apiVersion: federation.maistra.io/v1
@@ -21,10 +22,12 @@ metadata:
 spec:
   importRules:
   - type: NameSelector
-    importAsLocal: false
+    importAsLocal: true
     nameSelector:
-      namespace: db-system
+      namespace: azure-db-system
       name: cockroach-cockroachdb
-      alias:
-        namespace: db-system
-        name: cockroach-cockroachdb
+  - type: NameSelector
+    importAsLocal: true
+    nameSelector:
+      namespace: azure-db-system
+      name: cockroach-cockroachdb-public

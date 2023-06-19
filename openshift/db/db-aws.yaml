@@ -2,7 +2,7 @@ apiVersion: charts.operatorhub.io/v1alpha1
 kind: Cockroachdb
 metadata:
   name: cockroach
-  namespace: db-system
+  namespace: aws-db-system
 spec:
   clusterDomain: cluster.local
   conf:
@@ -53,10 +53,10 @@ spec:
       http: []
   service:
     discovery:
-      annotations: {}
+      annotations:
+        networking.istio.io/exportTo: "*"
       labels:
         app.kubernetes.io/component: cockroachdb
-        networking.istio.io/exportTo: "*"
     ports:
       grpc:
         external:
@@ -69,7 +69,8 @@ spec:
         name: http
         port: 8080
     public:
-      annotations: {}
+      annotations:
+        networking.istio.io/exportTo: "*"
       labels:
         app.kubernetes.io/component: cockroachdb
       type: ClusterIP

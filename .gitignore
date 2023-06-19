@@ -5,3 +5,4 @@ terraform/main.plan
 *.tfstate
 *.backup
 kubeconfig*
+app/certs
